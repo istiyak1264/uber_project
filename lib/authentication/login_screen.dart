@@ -152,15 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.fingerprint, color: Colors.blue),
-                label: const Text(
-                  "Login with Biometrics",
-                  style: TextStyle(fontSize: 16, color: Colors.blue),
-                ),
-              ),
             ],
           ),
         ),

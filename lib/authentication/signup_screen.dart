@@ -245,7 +245,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       "Login here",
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.blueAccent,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
