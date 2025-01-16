@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:users_app/authentication/login_screen.dart';
+import 'package:users_app/methods/common_methods.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -14,6 +15,29 @@ class _SignupScreenState extends State<SignupScreen> {
       TextEditingController();
   TextEditingController emailtextEditingController = TextEditingController();
   TextEditingController passwordtextEditingController = TextEditingController();
+
+  CommonMethods cMethods = CommonMethods();
+
+  checkIfNetworkIsAvailable() {
+    cMethods.checkConnectivity(context);
+    signUpFormValidation();
+  }
+
+  signUpFormValidation() {
+    if (usernametextEditingController.text.trim().length < 5) {
+      cMethods.displaySnackBar(
+          "Your name must be at least 5 or more characters", context);
+    } else if (userphonetextEditingController.text.trim().length != 11) {
+      cMethods.displaySnackBar("Your phone number must be 11 digits", context);
+    } else if (!emailtextEditingController.text.contains("@")) {
+      cMethods.displaySnackBar("Please enter a valid email", context);
+    } else if (passwordtextEditingController.text.trim().length < 6) {
+      cMethods.displaySnackBar(
+          "Your password must be at least 6 or more characters", context);
+    } else {
+      //register user
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +130,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       height: 25,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        checkIfNetworkIsAvailable();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
                         padding: const EdgeInsets.symmetric(
