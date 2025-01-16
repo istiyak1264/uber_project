@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:users_app/authentication/login_screen.dart';
 import 'package:users_app/methods/common_methods.dart';
+import 'package:users_app/pages/home_page.dart';
+import 'package:users_app/widgets/loading_dialog.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -35,8 +39,44 @@ class _SignupScreenState extends State<SignupScreen> {
       cMethods.displaySnackBar(
           "Your password must be at least 6 or more characters", context);
     } else {
-      //register user
+      registerNewUser();
     }
+  }
+
+  registerNewUser() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) =>
+          LoadingDialog(messageText: "Preparing your account..."),
+    );
+
+    // ignore: unused_local_variable
+    final User? userFirebase = (await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+      email: emailtextEditingController.text.trim(),
+      password: passwordtextEditingController.text.trim(),
+    )
+            .catchError((errorMsg) {
+      Navigator.pop(context);
+      // ignore: use_build_context_synchronously
+      cMethods.displaySnackBar(errorMsg.toString(), context);
+    }))
+        .user;
+    if (!context.mounted) return;
+    Navigator.pop(context);
+
+    DatabaseReference usersRef =
+        FirebaseDatabase.instance.ref().child("users").child(userFirebase!.uid);
+    Map userDataMap = {
+      "name": usernametextEditingController.text.trim(),
+      "email": emailtextEditingController.text.trim(),
+      "phone": userphonetextEditingController.text.trim(),
+      "id": userFirebase.uid,
+      "blockStatus": "no",
+    };
+    usersRef.set(userDataMap);
+    Navigator.push(context, MaterialPageRoute(builder: (c) => HomePage()));
   }
 
   @override
