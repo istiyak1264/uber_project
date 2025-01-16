@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:users_app/authentication/login_screen.dart';
 import 'package:users_app/methods/common_methods.dart';
 import 'package:users_app/pages/home_page.dart';
@@ -21,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController passwordtextEditingController = TextEditingController();
 
   CommonMethods cMethods = CommonMethods();
+  bool _isPasswordVisible = false;
 
   checkIfNetworkIsAvailable() {
     cMethods.checkConnectivity(context);
@@ -82,120 +83,175 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                  "/home/istiyak/Desktop/Flutter/users_app/assets/images/logo.png"),
-              Text(
-                "Create a User's Account",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
+              const SizedBox(height: 40),
+              Hero(
+                tag: "logo",
+                child: Image.asset(
+                  "/home/istiyak/Desktop/Flutter/users_app/assets/images/logo.png",
+                  height: 100,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(22),
+              const SizedBox(height: 20),
+              const Text(
+                "Create a User's Account",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                "Register to continue",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
                 child: Column(
                   children: [
                     TextField(
                       controller: usernametextEditingController,
                       keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: "username",
-                        labelStyle: TextStyle(
-                          fontSize: 14,
+                      decoration: InputDecoration(
+                        prefixIcon:
+                            const Icon(Icons.person, color: Colors.blue),
+                        labelText: "Username",
+                        hintText: "Enter your username",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 160, 158, 158),
+                          fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                      height: 22,
-                    ),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: userphonetextEditingController,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: "phone no",
-                        labelStyle: TextStyle(
-                          fontSize: 14,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.phone, color: Colors.blue),
+                        labelText: "Phone Number",
+                        hintText: "Enter your phone number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 160, 158, 158),
+                          fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                      height: 22,
-                    ),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: emailtextEditingController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: "user email",
-                        labelStyle: TextStyle(
-                          fontSize: 14,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                        labelText: "Email",
+                        hintText: "Enter your email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 160, 158, 158),
+                          fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                      height: 22,
-                    ),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: passwordtextEditingController,
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: "user password",
-                        labelStyle: TextStyle(
-                          fontSize: 14,
+                      obscureText: !_isPasswordVisible,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
+                        labelText: "Password",
+                        hintText: "Enter your password",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 160, 158, 158),
+                          fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                      height: 25,
-                    ),
+                    const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () {
                         checkIfNetworkIsAvailable();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
+                        backgroundColor: Colors.blueAccent,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 15),
-                      ),
-                      child: const Text("SignUp"),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (c) => LoginScreen()));
-                      },
-                      child: const Text(
-                        "Already have an account? Login here",
-                        style: TextStyle(
-                          color: Colors.grey,
+                            horizontal: 55, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
+                      ),
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Already have an account? ",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (c) => LoginScreen()),
+                      );
+                    },
+                    child: const Text(
+                      "Login here",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
