@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class CommonMethods {
   checkConnectivity(BuildContext context) async {
     var connectionResult = await Connectivity().checkConnectivity();
-    if (connectionResult != ConnectivityResult.mobile &&
-        connectionResult != ConnectivityResult.wifi) {
+    if (connectionResult == ConnectivityResult.none)
+    {
       if (!context.mounted) return;
       displaySnackBar(
           "Your Internet is not working. Please check your connection and try again",

@@ -51,7 +51,6 @@ class _SignupScreenState extends State<SignupScreen> {
           LoadingDialog(messageText: "Preparing your account..."),
     );
 
-    // ignore: unused_local_variable
     final User? userFirebase = (await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
       email: emailtextEditingController.text.trim(),
@@ -59,7 +58,6 @@ class _SignupScreenState extends State<SignupScreen> {
     )
             .catchError((errorMsg) {
       Navigator.pop(context);
-      // ignore: use_build_context_synchronously
       cMethods.displaySnackBar(errorMsg.toString(), context);
     }))
         .user;
@@ -90,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
               Image.asset(
                   "/home/istiyak/Desktop/Flutter/users_app/assets/images/logo.png"),
               Text(
-                "Create a User\'s Account",
+                "Create a User's Account",
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
