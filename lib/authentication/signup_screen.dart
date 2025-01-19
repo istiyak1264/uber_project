@@ -50,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) =>
-          LoadingDialog(messageText: "Preparing your account..."),
+          LoadingDialog(messageText: "Creating your account..."),
     );
 
     final User? userFirebase = (await FirebaseAuth.instance

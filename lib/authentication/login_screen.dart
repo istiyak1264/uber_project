@@ -1,5 +1,12 @@
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:users_app/authentication/signup_screen.dart';
+import 'package:users_app/global/global_var.dart';
+import 'package:users_app/methods/common_methods.dart';
+import 'package:users_app/pages/home_page.dart';
+import 'package:users_app/widgets/loading_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +19,72 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailtextEditingController = TextEditingController();
   TextEditingController passwordtextEditingController = TextEditingController();
   bool isPasswordVisible = false;
+  CommonMethods cMethods = CommonMethods();
+
+  void checkIfNetworkIsAvailable() {
+    cMethods.checkConnectivity(context);
+    signInFormValidation();
+  }
+
+  void signInFormValidation() {
+    if (!emailtextEditingController.text.contains("@")) {
+      cMethods.displaySnackBar("Please enter a valid email", context);
+    } else if (passwordtextEditingController.text.trim().length < 6) {
+      cMethods.displaySnackBar(
+          "Your password must be at least 6 or more characters", context);
+    } else {
+      signInUser();
+    }
+  }
+
+  void signInUser() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) =>
+          LoadingDialog(messageText: "Please wait..."),
+    );
+
+    try {
+      final User? userFirebase =
+          (await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailtextEditingController.text.trim(),
+        password: passwordtextEditingController.text.trim(),
+      ))
+              .user;
+
+      if (!context.mounted) return;
+      Navigator.pop(context);
+
+      if (userFirebase != null) {
+        DatabaseReference usersRef = FirebaseDatabase.instance
+            .ref()
+            .child("users")
+            .child(userFirebase.uid);
+        usersRef.once().then((snap) {
+          if (snap.snapshot.value != null) {
+            if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
+              userName = (snap.snapshot.value as Map)["name"];
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (c) => HomePage()),
+              );
+            } else {
+              FirebaseAuth.instance.signOut();
+              cMethods.displaySnackBar(
+                  "Your account has been blocked", context);
+            }
+          } else {
+            FirebaseAuth.instance.signOut();
+            cMethods.displaySnackBar("User doesn't exist", context);
+          }
+        });
+      }
+    } catch (error) {
+      Navigator.pop(context);
+      cMethods.displaySnackBar(error.toString(), context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Hero(
                 tag: "logo",
                 child: Image.asset(
-                  "/home/istiyak/Desktop/Flutter/users_app/assets/images/logo.png",
+                  "assets/images/logo.png",
                   height: 100,
                 ),
               ),
@@ -109,7 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        checkIfNetworkIsAvailable();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(
@@ -138,11 +213,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (c) => SignupScreen()),
+                        MaterialPageRoute(builder: (c) => const SignupScreen()),
                       );
                     },
                     child: const Text(
-                      "Register here",
+                      "Signup here",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.blue,
