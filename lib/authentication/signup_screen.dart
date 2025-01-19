@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously, body_might_complete_normally_catch_error
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
