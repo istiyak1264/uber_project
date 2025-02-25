@@ -217,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: const Text(
-                      "Signup here",
+                      "SignUp",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.blue,
@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-            ],  
+            ],
           ),
         ),
       ),
