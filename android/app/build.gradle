@@ -1,23 +1,13 @@
 plugins {
     id "com.android.application"
-    id "com.google.gms.google-services"
     id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
 android {
     namespace "com.example.users_app"
     compileSdk 34
     ndkVersion "25.1.8937393"
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 
     defaultConfig {
         applicationId "com.example.users_app"
@@ -29,12 +19,18 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
-    flutter {
-        source "../.."
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -42,5 +38,3 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:33.7.0")
     implementation "com.google.firebase:firebase-analytics"
 }
-
-apply plugin: "com.google.gms.google-services"

@@ -44,6 +44,7 @@ dependencies:
   google_maps_flutter_web:
   permission_handler:
   geolocator:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:

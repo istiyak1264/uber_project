@@ -17,10 +17,19 @@ class _HomePageState extends State<HomePage> {
       Completer<GoogleMapController>();
   GoogleMapController? controllerGoogleMap;
   Position? currentPostionOfUser;
+  String? mapStyle;
 
-  void updateMapTheme(GoogleMapController controller) {
-    getJsonFileFromThemes("themes/standard_style.json")
-        .then((value) => setGoogleMapStyle(value, controller));
+  @override
+  void initState() {
+    super.initState();
+    loadMapStyle();
+  }
+
+  Future<void> loadMapStyle() async {
+    String style = await getJsonFileFromThemes("themes/standard_style.json");
+    setState(() {
+      mapStyle = style;
+    });
   }
 
   Future<String> getJsonFileFromThemes(String mapStylePath) async {
@@ -30,13 +39,15 @@ class _HomePageState extends State<HomePage> {
     return utf8.decode(list);
   }
 
-  setGoogleMapStyle(String googleMapStyle, GoogleMapController controller) {
-    controller.setMapStyle(googleMapStyle);
-  }
-
   getCurrentLiveLocationOfUser() async {
+    LocationSettings locationSettings = const LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+    );
+
     Position positionOfUser = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
+      locationSettings: locationSettings,
+    );
+
     currentPostionOfUser = positionOfUser;
 
     LatLng positionOfUserInLatLng =
@@ -65,10 +76,10 @@ class _HomePageState extends State<HomePage> {
             initialCameraPosition: googlePlexInitialPosition,
             onMapCreated: (GoogleMapController mapController) {
               controllerGoogleMap = mapController;
-              updateMapTheme(controllerGoogleMap!);
               googleMapCompleterController.complete(controllerGoogleMap);
               getCurrentLiveLocationOfUser();
             },
+            style: mapStyle,
           ),
         ],
       ),
