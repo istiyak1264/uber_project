@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   final Completer<GoogleMapController> googleMapCompleterController =
       Completer<GoogleMapController>();
   GoogleMapController? controllerGoogleMap;
+  Position? currentPostionOfUser;
 
   void updateMapTheme(GoogleMapController controller) {
     getJsonFileFromThemes("themes/standard_style.json")
@@ -30,6 +32,20 @@ class _HomePageState extends State<HomePage> {
 
   setGoogleMapStyle(String googleMapStyle, GoogleMapController controller) {
     controller.setMapStyle(googleMapStyle);
+  }
+
+  getCurrentLiveLocationOfUser() async {
+    Position positionOfUser = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    currentPostionOfUser = positionOfUser;
+
+    LatLng positionOfUserInLatLng =
+        LatLng(currentPostionOfUser!.latitude, currentPostionOfUser!.longitude);
+    CameraPosition cameraPosition =
+        CameraPosition(target: positionOfUserInLatLng, zoom: 15);
+
+    controllerGoogleMap!
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
   static const CameraPosition googlePlexInitialPosition = CameraPosition(
@@ -51,6 +67,7 @@ class _HomePageState extends State<HomePage> {
               controllerGoogleMap = mapController;
               updateMapTheme(controllerGoogleMap!);
               googleMapCompleterController.complete(controllerGoogleMap);
+              getCurrentLiveLocationOfUser();
             },
           ),
         ],
