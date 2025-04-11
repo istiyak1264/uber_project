@@ -45,6 +45,7 @@ dependencies:
   permission_handler:
   geolocator:
   font_awesome_flutter:
+  lottie:
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
   assets:
     - /home/istiyak/Desktop/Flutter/users_app/assets/images/
     - themes/
+    - assets/animations/bike_loader.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

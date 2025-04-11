@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 // ignore: must_be_immutable
-class LoadingDialog extends StatelessWidget {
+class LoadingDialog extends StatefulWidget {
   String messageText;
   LoadingDialog({
     super.key,
@@ -9,38 +10,49 @@ class LoadingDialog extends StatelessWidget {
   });
 
   @override
+  LoadingDialogState createState() => LoadingDialogState();
+}
+
+// Make the state class public
+class LoadingDialogState extends State<LoadingDialog> {
+  bool _isAnimating = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _onAnimationComplete() {
+    setState(() {
+      _isAnimating = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      backgroundColor: Colors.black87,
-      child: Container(
-        margin: const EdgeInsets.all(15),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.black87,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              const SizedBox(width: 5,),
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-              const SizedBox(width: 8,),
-              Text(
-                messageText,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white, // Full screen white background
+      body: Center(
+        child: _isAnimating
+            ? Container(
+                color: Colors.white, // Set white background for animation
+                child: Center(
+                  child: Lottie.asset(
+                    'assets/animations/bike_loader.json',
+                    width: 150,
+                    height: 150,
+                    repeat: false, // Make sure the animation does not loop
+                    onLoaded: (composition) {
+                      // Listen to the animation's duration and completion
+                      Future.delayed(
+                          composition.duration, _onAnimationComplete);
+                    },
+                  ),
                 ),
+              )
+            : Container(
+                color: Colors.white, // Blank white screen after animation
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
