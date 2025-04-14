@@ -57,6 +57,8 @@ class DefaultFirebaseOptions {
     appId: '1:438526843454:android:92b590c1c9a443d0ee0f6f',
     messagingSenderId: '438526843454',
     projectId: 'uberproject-66082',
+    databaseURL: 'https://uberproject-66082-default-rtdb.firebaseio.com',
     storageBucket: 'uberproject-66082.firebasestorage.app',
   );
+
 }
